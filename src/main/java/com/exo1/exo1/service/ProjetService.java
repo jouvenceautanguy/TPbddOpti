@@ -23,8 +23,10 @@ public class ProjetService {
     }
 
     public ProjetDto findById(long id) {
+
         return projetMapper.toDto(projetRepository.findById(id).orElse(null));
     }
+
 
     public ProjetDto save(ProjetDto projetDto) {
         Projet projet = projetMapper.toEntity(projetDto);

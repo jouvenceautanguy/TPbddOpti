@@ -1,5 +1,6 @@
 package com.exo1.exo1.service;
 
+import com.exo1.exo1.dto.TaskDto;
 import com.exo1.exo1.dto.UserDto;
 import com.exo1.exo1.entity.User;
 import com.exo1.exo1.mapper.UserMapper;
@@ -7,6 +8,8 @@ import com.exo1.exo1.repository.ProjetRepository;
 import com.exo1.exo1.repository.TaskRepository;
 import com.exo1.exo1.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
@@ -22,12 +25,14 @@ public class UserService {
     private ProjetRepository projetRepository;
     private UserMapper userMapper;
     
-    public List<UserDto> findAll() {
-        return userMapper.toDtos(userRepository.findAll());
+    public Page<UserDto> findAll(PageRequest pageRequest) {
+
+        return userRepository.findAll(pageRequest).map(userMapper::toDto);
     }
 
+
     public UserDto findById(long id) {
-        return userMapper.toDto(userRepository.findByIdWithTask(id).orElse(null));
+        return userMapper.toDto(userRepository.findByIdWithProjectsAndTasks(id));
     }
 
     public UserDto save(UserDto userDto) {
